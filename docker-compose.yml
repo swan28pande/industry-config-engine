@@ -1,0 +1,17 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: industry_config
+      POSTGRES_PASSWORD: postgres
+    ports: ["5432:5432"]
+  classifier:
+    build: ./classifier
+    ports: ["8000:8000"]
+  app:
+    build: .
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/industry_config
+      CLASSIFIER_URL: http://classifier:8000
+    ports: ["8080:8080"]
+    depends_on: [db, classifier]
